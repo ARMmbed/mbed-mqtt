@@ -1,0 +1,11 @@
+paho_mqtt_embedded_c/MQTTClient-C/*
+paho_mqtt_embedded_c/MQTTClient/samples/*
+paho_mqtt_embedded_c/MQTTClient/test/*
+paho_mqtt_embedded_c/MQTTClient/src/arduino/*
+paho_mqtt_embedded_c/MQTTClient/src/linux/*
+paho_mqtt_embedded_c/MQTTPacket/samples/*
+paho_mqtt_embedded_c/MQTTPacket/test/*
+paho_mqtt-sn_embedded_c/MQTTSNClient/src/linux/*
+paho_mqtt-sn_embedded_c/MQTTSNGateway/*
+paho_mqtt-sn_embedded_c/MQTTSNPacket/samples/*
+paho_mqtt-sn_embedded_c/MQTTSNPacket/test/*
