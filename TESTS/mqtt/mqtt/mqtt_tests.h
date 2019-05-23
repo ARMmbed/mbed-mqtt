@@ -25,9 +25,9 @@
 namespace mqtt_global {
 // For TLS hostname must match the "Common Name" set in the server certificate
 //const char* hostname = "test.mosquitto.org";
-static const char* hostname = "192.168.8.52";
-static const char* topic = "test";
-static const char* mbed_public_test_topic = "mbed_public_test_topic";
+static const char* hostname = MBED_CONF_MBED_MQTT_TESTS_BROKER_HOSTNAME;
+static const char* topic = MBED_CONF_MBED_MQTT_TESTS_TOPIC;
+static const char* mbed_public_test_topic = MBED_CONF_MBED_MQTT_TESTS_PUBLIC_TOPIC_NAME;
 static char topic_too_long[100+1];
 static MQTTSN_topicid mbed_public_test_topic_sn;
 static const int port = 1883;
@@ -40,6 +40,14 @@ extern MQTT::Message default_message;
 extern MQTTSN::Message default_message_sn;
 static char message_buffer[100];
 }
+
+#if MBED_CONF_MBED_MQTT_TESTS_USERNAME_ALWAYS
+#define MQTT_API_ATTACH_USERNAME_PASSWORD() \
+    data.MQTTVersion.username = MBED_CONF_MBED_MQTT_TESTS_USERNAME; \
+    data.MQTTVersion.password = MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
+#else
+#define MQTT_API_ATTACH_USERNAME_PASSWORD() // Just to nothing
+#endif
 
 extern int arrivedcount;
 extern int arrivedcountSN;
@@ -132,9 +140,9 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
     data.clientID.cstring = (char*)clientID;
-    if (user_password) {
-        data.username.cstring = (char*)"mbed";
-        data.password.cstring = (char*)"1234";
+    if (user_password || MBED_CONF_MBED_MQTT_TESTS_USERNAME_ALWAYS) {
+        data.username.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_USERNAME;
+        data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
     }
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS2, messageArrived));
@@ -142,17 +150,23 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
     MQTT::Message message = mqtt_global::default_message;
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
-    while (arrivedcount < 1)
-        client.yield(100);
-
+    printf("1\n");
+    while (arrivedcount < 1) {
+        printf(".");
+        client.yield(10);
+    }
+printf("2\n");
     // QoS 1
     char buf[100];
     sprintf(buf, "QoS 1 %s\n", clientID);
     message.qos = MQTT::QOS1;
     message.payloadlen = strlen(buf)+1;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
-    while (arrivedcount < 2)
-        client.yield(100);
+    printf("3\n");
+    while (arrivedcount < 2) {
+        printf(".");
+        client.yield(10);
+    }
 
 //    // QoS 2
 //    sprintf(buf, "QoS 2 %s\n", clientID);
@@ -186,20 +200,20 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
     // QoS 0
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, mqtt_global::default_message_sn));
     while (arrivedcountSN < 1)
-        client.yield(100);
+        client.yield(10);
 
     // QoS 1
-    MQTTSN::Message message;
-    char buf[100];
-    sprintf(buf, "QoS 1 %s\n", clientID);
-    message.qos = MQTTSN::QOS0;
-    message.retained = false;
-    message.dup = false;
-    message.payload = (void*)buf;
-    message.payloadlen = strlen(buf)+1;
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, message));
-    while (arrivedcountSN < 2)
-        client.yield(100);
+//    MQTTSN::Message message;
+//    char buf[100];
+//    sprintf(buf, "QoS 1 %s\n", clientID);
+//    message.qos = MQTTSN::QOS0;
+//    message.retained = false;
+//    message.dup = false;
+//    message.payload = (void*)buf;
+//    message.payloadlen = strlen(buf)+1;
+//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, message));
+//    while (arrivedcountSN < 2)
+//        client.yield(10);
 
 //    // QoS 2
 //    sprintf(buf, "QoS 2 %s\n", clientID);
@@ -207,7 +221,7 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
 //    message.payloadlen = strlen(buf)+1;
 //    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK,client.publish(topic, message));
 //    while (arrivedcountSN < 3)
-//        client.yield(100);
+//        client.yield(10);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.unsubscribe(topic)); //mqtt_global::topic_sn
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.disconnect() != 0);

@@ -20,6 +20,7 @@
 #include "unity/unity.h"
 
 #define MQTT_API_INIT() \
+    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcount = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port); \

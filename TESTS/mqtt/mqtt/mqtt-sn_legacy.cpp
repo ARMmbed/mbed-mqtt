@@ -22,6 +22,7 @@
 #include <MQTTmbed.h> // Countdown
 
 #define MQTTSN_LEGACY_API_INIT() \
+    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcountSN = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     MQTTSNNetworkUDP mqttNet(net); \
