@@ -22,11 +22,10 @@
 #include <MQTTmbed.h> // Countdown
 
 #define MQTTSN_LEGACY_API_INIT() \
-    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcountSN = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     MQTTSNNetworkUDP mqttNet(net); \
-    MQTTSN::Client<MQTTSNNetworkUDP, Countdown> client(mqttNet); \
+    MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet); \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port_udp)); \
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
 
@@ -40,19 +39,11 @@ void MQTTSN_LEGACY_TEST_CONNECT()
     MQTTSN_LEGACY_API_DEINIT();
 }
 
-void MQTTSN_LEGACY_CONNECT_INVALID()
-{
-    MQTTSN_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-    TEST_ASSERT_EQUAL(-1, client.connect(data));
-    MQTTSN_LEGACY_API_DEINIT();
-}
-
 void MQTTSN_LEGACY_CONNECT_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTSNNetworkUDP mqttNet(net);
-    MQTTSN::Client<MQTTSNNetworkUDP, Countdown> client(mqttNet);
+    MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
     //Connect in UDP is not real, it will return success...
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect("i.dont.exist", mqtt_global::port_udp));
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
@@ -83,7 +74,7 @@ void MQTTSN_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTSNNetworkUDP mqttNet(net);
-    MQTTSN::Client<MQTTSNNetworkUDP, Countdown> client(mqttNet);
+    MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
     //Connect in UDP is not real, it will return success...
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect("i.dont.exist", mqtt_global::port));
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
@@ -126,7 +117,7 @@ void MQTTSN_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
     // There is no NULL check inside the subscribe function.
-//    TEST_ASSERT_EQUAL(-1, client.subscribe(topic_sn, MQTTSN::QOS0, NULL));
+    TEST_ASSERT_EQUAL(-1, client.subscribe(topic_sn, MQTTSN::QOS0, NULL));
     MQTTSN_LEGACY_API_DEINIT();
 }
 
@@ -232,7 +223,7 @@ void MQTTSN_LEGACY_IS_CONNECTED_NETWORK_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTSNNetworkUDP mqttNet(net);
-    MQTTSN::Client<MQTTSNNetworkUDP, Countdown> client(mqttNet);
+    MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
     //Connect in UDP is not real, it will return success...
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect("i.dont.exist", mqtt_global::port));
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
@@ -252,11 +243,11 @@ void MQTTSN_LEGACY_UDP_CONNECT_SUBSCRIBE_PUBLISH()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTSNNetworkUDP mqttNet(net);
 
-    MQTTSN::Client<MQTTSNNetworkUDP, Countdown> client(mqttNet);
+    MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port_udp));
 
-    send_messages_sn< MQTTSN::Client<MQTTSNNetworkUDP, Countdown> >(client, "MQTTSN_LEGACY_UDP_CONNECT_SUBSCRIBE_PUBLISH");
+    send_messages_sn< MQTTSN::Client<MQTTSNNetworkUDP, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> >(client, "MQTTSN_LEGACY_UDP_CONNECT_SUBSCRIBE_PUBLISH");
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }

@@ -37,25 +37,25 @@ int MQTTNetworkNew::disconnect() {
 MQTTClient::MQTTClient(TCPSocket* _socket) {
     init(_socket);
     mqttNet = new MQTTNetworkNew(socket);
-    client = new MQTT::Client<MQTTNetworkNew, Countdown>(*mqttNet);
+    client = new MQTT::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>(*mqttNet);
 };
 
 MQTTClient::MQTTClient(TLSSocket* _socket) {
     init(_socket);
     mqttNet = new MQTTNetworkNew(socket);
-    client = new MQTT::Client<MQTTNetworkNew, Countdown>(*mqttNet);
+    client = new MQTT::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>(*mqttNet);
 };
 
 MQTTClient::MQTTClient(UDPSocket* _socket) {
     init(_socket);
     mqttNet = new MQTTNetworkNew(socket);
-    clientSN = new MQTTSN::Client<MQTTNetworkNew, Countdown>(*mqttNet);
+    clientSN = new MQTTSN::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>(*mqttNet);
 };
 
  MQTTClient::MQTTClient(DTLSSocket* _socket) {
     init(_socket);
     mqttNet = new MQTTNetworkNew(socket);
-    clientSN = new MQTTSN::Client<MQTTNetworkNew, Countdown>(*mqttNet);
+    clientSN = new MQTTSN::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>(*mqttNet);
 };
 
 nsapi_error_t MQTTClient::connect(MQTTPacket_connectData& options) {

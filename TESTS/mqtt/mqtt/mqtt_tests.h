@@ -28,7 +28,7 @@ namespace mqtt_global {
 static const char* hostname = MBED_CONF_MBED_MQTT_TESTS_BROKER_HOSTNAME;
 static const char* topic = MBED_CONF_MBED_MQTT_TESTS_TOPIC;
 static const char* mbed_public_test_topic = MBED_CONF_MBED_MQTT_TESTS_PUBLIC_TOPIC_NAME;
-static char topic_too_long[100+1];
+static char topic_too_long[MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE+1];
 static MQTTSN_topicid mbed_public_test_topic_sn;
 static const int port = 1883;
 static const int port_tls = 8883;
@@ -43,8 +43,8 @@ static char message_buffer[100];
 
 #if MBED_CONF_MBED_MQTT_TESTS_USERNAME_ALWAYS
 #define MQTT_API_ATTACH_USERNAME_PASSWORD() \
-    data.MQTTVersion.username = MBED_CONF_MBED_MQTT_TESTS_USERNAME; \
-    data.MQTTVersion.password = MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
+    data.username.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_USERNAME; \
+    data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
 #else
 #define MQTT_API_ATTACH_USERNAME_PASSWORD() // Just to nothing
 #endif
@@ -59,7 +59,6 @@ void messageArrivedSN(MQTTSN::MessageData& md);
  */
 void MQTT_LEGACY_CONNECT_NOT_CONNECTED();
 void MQTT_LEGACY_CONNECT();
-void MQTT_LEGACY_CONNECT_INVALID();
 void MQTT_LEGACY_SUBSCRIBE();
 void MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED();
 void MQTT_LEGACY_SUBSCRIBE_CLIENT_NOT_CONNECTED();
@@ -78,7 +77,6 @@ void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH();
 
 void MQTTSN_LEGACY_CONNECT_NOT_CONNECTED();
 void MQTTSN_LEGACY_TEST_CONNECT(); // Avoid clash with MQTTSN enum.
-void MQTTSN_LEGACY_CONNECT_INVALID();
 void MQTTSN_LEGACY_TEST_SUBSCRIBE(); // Avoid clash with MQTTSN enum.
 void MQTTSN_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED();
 void MQTTSN_LEGACY_SUBSCRIBE_CLIENT_NOT_CONNECTED();
@@ -98,7 +96,6 @@ void MQTTSN_LEGACY_UDP_CONNECT_SUBSCRIBE_PUBLISH();
 // New API:
 void MQTT_CONNECT_NOT_CONNECTED();
 void MQTT_CONNECT();
-void MQTT_CONNECT_INVALID();
 void MQTT_SUBSCRIBE();
 void MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED();
 void MQTT_SUBSCRIBE_CLIENT_NOT_CONNECTED();
@@ -118,7 +115,6 @@ void MQTT_TLS_CONNECT_SUBSCRIBE_PUBLISH();
 
 void MQTTSN_CONNECT_NOT_CONNECTED();
 void MQTTSN_TEST_CONNECT(); // Avoid clash with MQTTSN enum.
-void MQTTSN_CONNECT_INVALID();
 void MQTTSN_TEST_SUBSCRIBE(); // Avoid clash with MQTTSN enum.
 void MQTTSN_SUBSCRIBE_NETWORK_NOT_CONNECTED();
 void MQTTSN_SUBSCRIBE_CLIENT_NOT_CONNECTED();
@@ -145,24 +141,24 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
         data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
     }
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS2, messageArrived));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
 
     MQTT::Message message = mqtt_global::default_message;
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
-    printf("1\n");
+
     while (arrivedcount < 1) {
         printf(".");
         client.yield(10);
     }
-printf("2\n");
+
     // QoS 1
     char buf[100];
     sprintf(buf, "QoS 1 %s\n", clientID);
     message.qos = MQTT::QOS1;
     message.payloadlen = strlen(buf)+1;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
-    printf("3\n");
+
     while (arrivedcount < 2) {
         printf(".");
         client.yield(10);
@@ -195,7 +191,7 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic;
     init_topic_sn(topic);
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(topic, MQTTSN::QOS2, messageArrivedSN));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(topic, MQTTSN::QOS1, messageArrivedSN));
 
     // QoS 0
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, mqtt_global::default_message_sn));

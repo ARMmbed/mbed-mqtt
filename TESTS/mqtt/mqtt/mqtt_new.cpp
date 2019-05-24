@@ -20,15 +20,14 @@
 #include "unity/unity.h"
 
 #define MQTT_API_INIT() \
-    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcount = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
-    SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port); \
     TCPSocket socket; \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.open(net)); \
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(sockAddr)); \
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(mqtt_global::hostname, mqtt_global::port)); \
     MQTTClient client(&socket); \
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer; \
+    MQTT_API_ATTACH_USERNAME_PASSWORD() \
     data.MQTTVersion = 3;
 
 #define MQTT_API_DEINIT() \
@@ -39,14 +38,6 @@ void MQTT_CONNECT()
     MQTT_API_INIT();
     data.clientID.cstring = (char*)"MQTT_CONNECT";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    MQTT_API_DEINIT();
-}
-
-void MQTT_CONNECT_INVALID()
-{
-    MQTT_API_INIT();
-    data.clientID.cstring = (char*)"";
-    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data)); // Sending works. The retval from MQTTDeserialize_connack (2) is returned... Bug?
     MQTT_API_DEINIT();
 }
 
@@ -77,10 +68,9 @@ void MQTT_SUBSCRIBE()
 void MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
-    SocketAddress sockAddr("i.dont.exist", mqtt_global::port);
     TCPSocket socket;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.open(net));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, socket.connect(sockAddr));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_DNS_FAILURE, socket.connect("i.dont.exist", mqtt_global::port));
     MQTTClient client(&socket);
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
@@ -92,8 +82,6 @@ void MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 void MQTT_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)""; // Left blank intentionally, so client.connect() fails.
-    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data)); // Sending works. The retval from MQTTDeserialize_connack (2) is returned... Bug?
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
     MQTT_API_DEINIT();
 }
@@ -188,7 +176,7 @@ void MQTT_CONNECT_USER_PASSWORD_INCORRECT()
     data.clientID.cstring = (char*)"MQTT_CONNECT_USER_PASSWORD_INCORRECT";
     data.username.cstring = (char*)"wronguser";
     data.password.cstring = (char*)"wrongpassword";
-    TEST_ASSERT_EQUAL(5, client.connect(data));
+    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // Sending works. The retval from MQTTDeserialize_connack (5) is returned... Bug?
     MQTT_API_DEINIT();
 }
@@ -196,10 +184,9 @@ void MQTT_CONNECT_USER_PASSWORD_INCORRECT()
 void MQTT_CONNECT_SUBSCRIBE_PUBLISH()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
-    SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port);
     TCPSocket socket;
     socket.open(net);
-    socket.connect(sockAddr);
+    socket.connect(mqtt_global::hostname, mqtt_global::port);
 
     MQTTClient client(&socket);
 
@@ -228,10 +215,9 @@ void MQTT_TLS_CONNECT_SUBSCRIBE_PUBLISH()
 void MQTT_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
-    SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port);
     TCPSocket socket;
     socket.open(net);
-    socket.connect(sockAddr);
+    socket.connect(mqtt_global::hostname, mqtt_global::port);
 
     MQTTClient client(&socket);
 

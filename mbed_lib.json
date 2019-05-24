@@ -1,6 +1,10 @@
 {
     "name": "mbed-mqtt",
     "config": {
+        "max-packet-size": {
+            "help": "Max serialized MQTT packet size, set by template parameter in paho library.",
+            "value": "200"
+        },
         "tests-broker-hostname": {
             "help": "Name or address of the broker server hostname.",
             "value": "\"192.168.8.52\""
@@ -11,7 +15,7 @@
         },
         "tests-public-topic-enable": {
             "help": "Set to true if there is a publicly available topic that gets messages posted frequently. See tests-public-topic-name. Required for *_SUBSCRIBE_RECEIVE tests.",
-            "value": "true"
+            "value": "false"
         },
         "tests-public-topic-name": {
             "help": "Name of the public test topic that publishes message frequently. Required for *_SUBSCRIBE_RECEIVE tests.",
@@ -19,15 +23,15 @@
         },
         "tests-mqtt-sn-enable": {
             "help": "Set to true if an MQTT-SN Gateway is available.",
-            "value": "true"
+            "value": "false"
         },
         "tests-username-password-protection-enable": {
             "help": "Set to true if the MQTT broker has username/password protection enabled. Provide the username and password in tests-username and tests-password.",
-            "value": "true"
+            "value": "false"
         },
         "tests-tls-enable": {
             "help": "Set to true if the MQTT broker has TLS protection enabled. NOTE: you need to set certificate in mqtt_global::SSL_CA_PEM.",
-            "value": "true"
+            "value": "false"
         },
         "tests-username": {
             "help": "MQTT messages username. To be used in the *USER_PASSWORD* tests. See also tests-username-always",
@@ -38,11 +42,7 @@
             "value": "\"1234\""
         },
         "tests-username-always": {
-            "help": "Always attach the username to messages (some brokers require this).",
-            "value": "false"
-        },
-        "tests-password-always": {
-            "help": "Always attach the password to messages (some brokers require this).",
+            "help": "Always attach the username and password to messages (some brokers require this).",
             "value": "false"
         }
     }

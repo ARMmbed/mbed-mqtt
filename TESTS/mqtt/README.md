@@ -125,6 +125,37 @@ Finally, make sure the Gateway port is emabled for external devices:
 $ sudo ufw allow 10000/udp
 ```
 
+Providing custom configuration (optional)
+-----------------------------------------
+
+By default the tests will run on a predefined local server as configured in  mbed_lib.json.
+
+It is possible to override the default configuration by providing an `mbed_app.json` file.
+
+The example below will configure the tests to run on a `flespi.io` public MQTT server:
+
+```
+{
+    "config": {
+
+    },
+    "target_overrides": {
+        "*": {
+            "mbed-mqtt.tests-broker-hostname": "\"mqtt.flespi.io\"",
+            "mbed-mqtt.tests-topic": "\"test\"",
+            "mbed-mqtt.tests-public-topic-enable": "false",
+            "mbed-mqtt.tests-public-topic-name": "\"mbed_public_test_topic\"",
+            "mbed-mqtt.tests-username-password-protection-enable": "true",
+            "mbed-mqtt.tests-tls-enable": "false",
+            "mbed-mqtt.tests-username": "\"YOUR_FLESPI_TOKEN\"",
+            "mbed-mqtt.tests-password": "\"\"",
+            "mbed-mqtt.tests-username-always": "false",
+            "mbed-mqtt.tests-mqtt-sn-enable": "false",
+            "target.network-default-interface-type": "ETHERNET"
+           }
+    }
+}
+```
 
 Building test binaries
 --------------------------
@@ -187,25 +218,6 @@ Device is connected to network and connection to MQTT server is established.
 Call to `client.connect()` succeeds (returns NSAPI_ERROR_OK).
 
 
-### MQTT_CONNECT_INVALID
-
-**Description:**
-
-Client cannot connect to broker with an empty clientID.
-
-**Preconditions:**
-
-Device is connected to network and a connection to MQTT server is established.
-
-**Test steps:**
-
-1. Call `client.connect()` with an invalid connectData provided (for example: empty clientID).
-
-**Expected result:**
-
-Call to `client.connect()` returns -1 error in step 1.
-
-
 ### MQTT_CONNECT_NOT_CONNECTED
 
 **Description:**
@@ -249,17 +261,15 @@ Client returns an error if subscribing to a topic when there is no connection to
 
 **Preconditions:**
 
-Device is connected to network.
+Device is connected to network, but not connected to broker or server.
 
 **Test steps:**
 
-1. Try to connect to a nonexistent MQTT server address or incorrect port.
-2. Call `client.connect()` with a valid connectData provided.
-3. Call `client.subscribe()` with a valid topic and QoS0.
+1. Call `client.subscribe()` with a valid topic and QoS0.
 
 **Expected result:**
 
-Call to `client.subscribe()` returns -1 in step 3.
+Call to `client.subscribe()` returns -1 in step 1.
 
 
 ### MQTT_SUBSCRIBE_CLIENT_NOT_CONNECTED

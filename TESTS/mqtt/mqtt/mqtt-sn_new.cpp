@@ -20,7 +20,6 @@
 #include <MQTTClientMbedOs.h>
 
 #define MQTTSN_API_INIT() \
-    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcountSN = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port_udp); \
@@ -38,14 +37,6 @@ void MQTTSN_TEST_CONNECT()
     MQTTSN_API_INIT();
     data.clientID.cstring = (char*)"MQTTSN_CONNECT";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    MQTTSN_API_DEINIT();
-}
-
-void MQTTSN_CONNECT_INVALID()
-{
-    MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.connect(data));
     MQTTSN_API_DEINIT();
 }
 

@@ -23,13 +23,13 @@
 #include <MQTTmbed.h> // Countdown
 
 #define MQTT_LEGACY_API_INIT() \
-    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     arrivedcount = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     MQTTNetwork mqttNet(net); \
-    MQTT::Client<MQTTNetwork, Countdown> client(mqttNet); \
+    MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet); \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port)); \
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer; \
+    MQTT_API_ATTACH_USERNAME_PASSWORD()\
     data.MQTTVersion = 3;
 
 #define MQTT_LEGACY_API_DEINIT() TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
@@ -42,19 +42,11 @@ void MQTT_LEGACY_CONNECT()
     MQTT_LEGACY_API_DEINIT();
 }
 
-void MQTT_LEGACY_CONNECT_INVALID()
-{
-    MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"";
-    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data)); // Sending works. The retval from MQTTDeserialize_connack (2) is returned... Bug?
-    MQTT_LEGACY_API_DEINIT();
-}
-
 void MQTT_LEGACY_CONNECT_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTNetwork mqttNet(net);
-    MQTT::Client<MQTTNetwork, Countdown> client(mqttNet);
+    MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
     TEST_ASSERT_EQUAL(NSAPI_ERROR_DNS_FAILURE, mqttNet.connect("i.dont.exist", mqtt_global::port));
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     TEST_ASSERT_EQUAL(-1, client.connect(data));
@@ -77,7 +69,7 @@ void MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTNetwork mqttNet(net);
-    MQTT::Client<MQTTNetwork, Countdown> client(mqttNet);
+    MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
     TEST_ASSERT_EQUAL(NSAPI_ERROR_DNS_FAILURE, mqttNet.connect("i.dont.exist", mqtt_global::port));
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
@@ -89,8 +81,7 @@ void MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 void MQTT_LEGACY_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)""; // Left blank intentionally, so client.connect() fails.
-    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data)); // Sending works. The retval from MQTTDeserialize_connack (2) is returned... Bug?
+    // Intentionally skip connecting.
     TEST_ASSERT_EQUAL(-1, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
     MQTT_LEGACY_API_DEINIT();
 }
@@ -185,7 +176,7 @@ void MQTT_LEGACY_CONNECT_USER_PASSWORD_INCORRECT()
     data.clientID.cstring = (char*)"MQTT_LEGACY_CONNECT_USER_PASSWORD_INCORRECT";
     data.username.cstring = (char*)"wronguser";
     data.password.cstring = (char*)"wrongpassword";
-    TEST_ASSERT_EQUAL(5, client.connect(data));
+    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // Sending works. The retval from MQTTDeserialize_connack (5) is returned... Bug?
     MQTT_LEGACY_API_DEINIT();
 }
@@ -194,11 +185,11 @@ void MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTNetwork mqttNet(net);
-    MQTT::Client<MQTTNetwork, Countdown> client(mqttNet);
+    MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port));
 
-    send_messages< MQTT::Client<MQTTNetwork, Countdown> >(client, "MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH");
+    send_messages< MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> >(client, "MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH");
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }
@@ -207,11 +198,11 @@ void MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTNetwork mqttNet(net);
-    MQTT::Client<MQTTNetwork, Countdown> client(mqttNet);
+    MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port));
 
-    send_messages< MQTT::Client<MQTTNetwork, Countdown> >(client, "MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD", true);
+    send_messages< MQTT::Client<MQTTNetwork, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> >(client, "MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD", true);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }
@@ -221,12 +212,12 @@ void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     MQTTNetworkTLS mqttNet(net);
 
-    MQTT::Client<MQTTNetworkTLS, Countdown> client(mqttNet);
+    MQTT::Client<MQTTNetworkTLS, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port_tls,
             mqtt_global::SSL_CA_PEM, mqtt_global::SSL_CLIENT_CERT_PEM, mqtt_global::SSL_CLIENT_PRIVATE_KEY_PEM));
 
-    send_messages< MQTT::Client<MQTTNetworkTLS, Countdown> >(client, "MQTT_LEGACYTLS_CONNECT_SUBSCRIBE_PUBLISH");
+    send_messages< MQTT::Client<MQTTNetworkTLS, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> >(client, "MQTT_LEGACYTLS_CONNECT_SUBSCRIBE_PUBLISH");
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }

@@ -79,8 +79,8 @@ private:
     MQTTNetworkNew* mqttNet;
     NetworkInterface *net;
 
-    MQTT::Client<MQTTNetworkNew, Countdown>* client;
-    MQTTSN::Client<MQTTNetworkNew, Countdown>* clientSN;
+    MQTT::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>* client;
+    MQTTSN::Client<MQTTNetworkNew, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE>* clientSN;
 };
 
 #endif // MQTT_CLIENT_MBED_OS_H
