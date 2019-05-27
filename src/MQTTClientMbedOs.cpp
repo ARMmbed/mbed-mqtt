@@ -18,11 +18,27 @@
 #include "MQTTClientMbedOs.h"
 
 int MQTTNetworkNew::read(unsigned char* buffer, int len, int timeout) {
-    return socket->recv(buffer, len);
+    nsapi_size_or_error_t rc = 0;
+    socket->set_timeout(timeout);
+    rc = socket->recv(buffer, len);
+    if (rc == NSAPI_ERROR_WOULD_BLOCK){
+        // time out and no data
+        // MQTTClient.readPacket() requires 0 on time out and no data.
+        return 0;
+    }
+    return rc;
 }
 
 int MQTTNetworkNew::write(unsigned char* buffer, int len, int timeout) {
-    return socket->send(buffer, len);
+    nsapi_size_or_error_t rc = 0;
+    socket->set_timeout(timeout);
+    rc = socket->send(buffer, len);
+    if (rc == NSAPI_ERROR_WOULD_BLOCK){
+        // time out and no data
+        // MQTTClient.writePacket() requires 0 on time out and no data.
+        return 0;
+    }
+    return rc;
 }
 
 int MQTTNetworkNew::connect(const char* hostname, int port) {
