@@ -81,7 +81,7 @@ public:
 
     int getNext()
     {
-        return next = (next == MAX_PACKET_ID) ? 1 : ++next;
+        return next = (next == MAX_PACKET_ID) ? 1 : next + 1;
     }
 
 private:
@@ -700,7 +700,7 @@ exit:
 template<class Network, class Timer, int MAX_PACKET_SIZE, int b>
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::connect()
 {
-    MQTTPacket_connectData default_options = MQTTPacket_connectData_initializer;
+    MQTTSNPacket_connectData default_options = MQTTSNPacket_connectData_initializer;
     return connect(default_options);
 }
 
