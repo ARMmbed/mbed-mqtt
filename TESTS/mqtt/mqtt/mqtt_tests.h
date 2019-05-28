@@ -142,7 +142,7 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
         data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
     }
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS2, messageArrived));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
 
     MQTT::Message message = mqtt_global::default_message;
 

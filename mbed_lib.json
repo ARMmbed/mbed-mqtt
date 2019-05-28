@@ -5,6 +5,10 @@
             "help": "Max serialized MQTT packet size, set by template parameter in paho library.",
             "value": "200"
         },
+        "max-connections": {
+            "help": "Max simultaneous connections, set by template parameter in paho library.",
+            "value": "5"
+        },
         "tests-broker-hostname": {
             "help": "Name or address of the broker server hostname.",
             "value": "\"192.168.8.52\""
