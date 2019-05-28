@@ -172,10 +172,27 @@ bool MQTTClient::isConnected() {
     }
 }
 
+void MQTTClient::setDefaultMessageHandler(messageHandler mh) {
+    nsapi_error_t ret = NSAPI_ERROR_OK;
+    if (client != NULL) {
+        client->setDefaultMessageHandler(mh);
+    } else if (clientSN != NULL) {
+        client->setDefaultMessageHandler(mh);
+    }
+}
+
+nsapi_error_t MQTTClient::setMessageHandler(const char* topicFilter, messageHandler mh) {
+    if (clientSN != NULL) {
+        return NSAPI_ERROR_UNSUPPORTED;
+    } else if (client == NULL) {
+        return NSAPI_ERROR_NO_CONNECTION;
+    } else {
+        return client->setMessageHandler(topicFilter, mh);
+    }
+}
+
 void MQTTClient::init(Socket* sock) {
     socket = sock;
     client = NULL;
     clientSN = NULL;
 }
-
-

@@ -214,6 +214,17 @@ public:
      */
     bool isConnected();
 
+    /** Set the default message handling callback - used for any message which does not match a subscription message handler
+     *  @param mh - pointer to the callback function.  Set to 0 to remove.
+     */
+    void setDefaultMessageHandler(messageHandler mh);
+
+    /** Set a message handling callback.  This can be used outside of the the subscribe method.
+     *  @param topicFilter - a topic pattern which can include wildcards
+     *  @param mh - pointer to the callback function. If 0, removes the callback if any
+     */
+    nsapi_error_t setMessageHandler(const char* topicFilter, messageHandler mh);
+
 private:
     /**
      * @brief Helper function to initialize member variables.
