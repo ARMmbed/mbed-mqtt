@@ -32,11 +32,10 @@ Example code:
 #include <MQTTClientMbedOs.h>
 
 NetworkInterface *net = NetworkInterface::get_default_instance();
-SocketAddress sockAddr(hostname, port);
 TCPSocket socket;
 MQTTClient client(&socket);
 socket.open(net);
-socket.connect(sockAddr);
+socket.connect(hostname, port);
 ```
 
 The socket has to be opened and connected in order for the client to be able to interact with the broker.
@@ -70,7 +69,7 @@ mqttNet.connect(mqtt_global::hostname, mqtt_global::port);
 
 The MQTTNetwork has to `connect` to a broker, given its address and port number.
 
-
+#### API usage ####
 
 Apart from lanaguage details and different creation and initialization procedure, the APIs of both the legacy and new API are the same.
 

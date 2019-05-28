@@ -76,8 +76,8 @@ void MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD();
 void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH();
 
 void MQTTSN_LEGACY_CONNECT_NOT_CONNECTED();
-void MQTTSN_LEGACY_TEST_CONNECT(); // Avoid clash with MQTTSN enum.
-void MQTTSN_LEGACY_TEST_SUBSCRIBE(); // Avoid clash with MQTTSN enum.
+void MQTTSN_LEGACY_CONNECT();
+void MQTTSN_LEGACY_SUBSCRIBE();
 void MQTTSN_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED();
 void MQTTSN_LEGACY_SUBSCRIBE_CLIENT_NOT_CONNECTED();
 void MQTTSN_LEGACY_SUBSCRIBE_TOPIC_TOO_LONG();
@@ -85,7 +85,7 @@ void MQTTSN_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER();
 void MQTTSN_LEGACY_SUBSCRIBE_RECEIVE();
 void MQTTSN_LEGACY_UNSUBSCRIBE_WITHOUT_SUBSCRIBE();
 void MQTTSN_LEGACY_UNSUBSCRIBE_INVALID();
-void MQTTSN_LEGACY_TEST_PUBLISH();
+void MQTTSN_LEGACY_PUBLISH();
 void MQTTSN_LEGACY_PUBLISH_NOT_CONNECTED();
 void MQTTSN_LEGACY_PUBLISH_TOPIC_TOO_LONG();
 void MQTTSN_LEGACY_IS_CONNECTED();
@@ -130,6 +130,7 @@ void MQTTSN_IS_CONNECTED();
 void MQTTSN_IS_CONNECTED_CLIENT_NOT_CONNECTED();
 void MQTTSN_IS_CONNECTED_NETWORK_NOT_CONNECTED();
 void MQTTSN_UDP_CONNECT_SUBSCRIBE_PUBLISH();
+void MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH();
 
 template <class Client> void send_messages(Client &client, char *clientID, bool user_password = false) {
     arrivedcount = 0;
@@ -141,7 +142,7 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
         data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
     }
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS2, messageArrived));
 
     MQTT::Message message = mqtt_global::default_message;
 
@@ -168,7 +169,7 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
 //    sprintf(buf, "QoS 2 %s\n", clientID);
 //    message.qos = MQTT::QOS2;
 //    message.payloadlen = strlen(buf)+1;
-//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, message));
+//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
 //    while (arrivedcount < 3)
 //        client.yield(100);
 
@@ -199,17 +200,17 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
         client.yield(10);
 
     // QoS 1
-//    MQTTSN::Message message;
-//    char buf[100];
-//    sprintf(buf, "QoS 1 %s\n", clientID);
-//    message.qos = MQTTSN::QOS0;
-//    message.retained = false;
-//    message.dup = false;
-//    message.payload = (void*)buf;
-//    message.payloadlen = strlen(buf)+1;
-//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, message));
-//    while (arrivedcountSN < 2)
-//        client.yield(10);
+    MQTTSN::Message message;
+    char buf[100];
+    sprintf(buf, "QoS 1 %s\n", clientID);
+    message.qos = MQTTSN::QOS0;
+    message.retained = false;
+    message.dup = false;
+    message.payload = (void*)buf;
+    message.payloadlen = strlen(buf)+1;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, message));
+    while (arrivedcountSN < 2)
+        client.yield(10);
 
 //    // QoS 2
 //    sprintf(buf, "QoS 2 %s\n", clientID);

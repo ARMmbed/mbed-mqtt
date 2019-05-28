@@ -261,3 +261,20 @@ void MQTTSN_UDP_CONNECT_SUBSCRIBE_PUBLISH()
 
     socket.close();
 }
+
+void MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH()
+{
+    NetworkInterface *net = NetworkInterface::get_default_instance();
+    DTLSSocket *socket = new DTLSSocket; // Allocate on heap to avoid stack overflow.
+    TEST_ASSERT(NSAPI_ERROR_OK == socket->open(net));
+    TEST_ASSERT(NSAPI_ERROR_OK == socket->set_root_ca_cert(mqtt_global::SSL_CA_PEM));
+    int ret = socket->connect(mqtt_global::hostname, mqtt_global::port_udp);
+    TEST_ASSERT(NSAPI_ERROR_OK == ret);
+
+    MQTTClient client(socket);
+
+    send_messages_sn< MQTTClient >(client, "MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH");
+
+    socket->close();
+    delete socket;
+}
