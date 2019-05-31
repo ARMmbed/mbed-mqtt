@@ -35,7 +35,7 @@
 void MQTTSN_TEST_CONNECT()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_CONNECT";
+    data.clientID.cstring = (char *)"MQTTSN_CONNECT";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_API_DEINIT();
 }
@@ -59,7 +59,7 @@ void MQTTSN_CONNECT_NOT_CONNECTED()
 void MQTTSN_TEST_SUBSCRIBE()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_TEST_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTTSN_TEST_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
@@ -86,7 +86,7 @@ void MQTTSN_SUBSCRIBE_NETWORK_NOT_CONNECTED()
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(sockAddr));
     MQTTClient client(&socket);
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
-    data.clientID.cstring = (char*)"MQTTSN_SUBSCRIBE_NETWORK_NOT_CONNECTED";
+    data.clientID.cstring = (char *)"MQTTSN_SUBSCRIBE_NETWORK_NOT_CONNECTED";
     // ... but the connect should fail ...
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.connect(data));
     MQTTSN_topicid topic_sn;
@@ -98,7 +98,7 @@ void MQTTSN_SUBSCRIBE_NETWORK_NOT_CONNECTED()
 void MQTTSN_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+    data.clientID.cstring = (char *)"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.connect(data));
@@ -109,7 +109,7 @@ void MQTTSN_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 void MQTTSN_SUBSCRIBE_TOPIC_TOO_LONG()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_SUBSCRIBE_TOPIC_TOO_LONG";
+    data.clientID.cstring = (char *)"MQTTSN_SUBSCRIBE_TOPIC_TOO_LONG";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn;
     init_topic_sn_too_long(topic_sn);
@@ -120,7 +120,7 @@ void MQTTSN_SUBSCRIBE_TOPIC_TOO_LONG()
 void MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
@@ -132,13 +132,13 @@ void MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 void MQTTSN_SUBSCRIBE_RECEIVE()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTTSN_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     int arrivedCountBeforeSubscription = arrivedcountSN;
     MQTTSN_topicid topic_sn;
     topic_sn.type = MQTTSN_TOPIC_TYPE_NORMAL;
     topic_sn.data.long_.len = strlen(mqtt_global::mbed_public_test_topic);
-    topic_sn.data.long_.name = const_cast<char*>(mqtt_global::mbed_public_test_topic);
+    topic_sn.data.long_.name = const_cast<char *>(mqtt_global::mbed_public_test_topic);
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(topic_sn, MQTTSN::QOS0, messageArrivedSN));
     // TODO get the callbacks working for MQTT-SN
     while (arrivedCountBeforeSubscription == arrivedcountSN) {
@@ -152,7 +152,7 @@ void MQTTSN_SUBSCRIBE_RECEIVE()
 void MQTTSN_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTTSN_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
@@ -163,7 +163,7 @@ void MQTTSN_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 void MQTTSN_UNSUBSCRIBE_INVALID()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_UNSUBSCRIBE_INVALID";
+    data.clientID.cstring = (char *)"MQTTSN_UNSUBSCRIBE_INVALID";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn_too_long;
     init_topic_sn_too_long(topic_sn_too_long);
@@ -174,7 +174,7 @@ void MQTTSN_UNSUBSCRIBE_INVALID()
 void MQTTSN_TEST_PUBLISH()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_PUBLISH";
+    data.clientID.cstring = (char *)"MQTTSN_PUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic_sn;
     init_topic_sn(topic_sn);
@@ -200,7 +200,7 @@ void MQTTSN_PUBLISH_NOT_CONNECTED()
 void MQTTSN_PUBLISH_TOPIC_TOO_LONG()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_PUBLISH";
+    data.clientID.cstring = (char *)"MQTT_PUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // TODO verify if this is passing intentionally or if this is a bug?
 //    TEST_ASSERT_EQUAL(-1, client.publish(mqtt_global::topic_too_long, mqtt_global::default_message));
@@ -214,7 +214,7 @@ void MQTTSN_PUBLISH_TOPIC_TOO_LONG()
 void MQTTSN_IS_CONNECTED()
 {
     MQTTSN_API_INIT();
-    data.clientID.cstring = (char*)"MQTTSN_IS_CONNECTED";
+    data.clientID.cstring = (char *)"MQTTSN_IS_CONNECTED";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_TRUE(client.isConnected());
     MQTTSN_API_DEINIT();
@@ -238,7 +238,7 @@ void MQTTSN_IS_CONNECTED_NETWORK_NOT_CONNECTED()
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(sockAddr));
     MQTTClient client(&socket);
     MQTTSNPacket_connectData data = MQTTSNPacket_connectData_initializer;
-    data.clientID.cstring = (char*)"MQTTSN_IS_CONNECTED_NETWORK_NOT_CONNECTED";
+    data.clientID.cstring = (char *)"MQTTSN_IS_CONNECTED_NETWORK_NOT_CONNECTED";
 
     TEST_ASSERT_FALSE(client.isConnected());
 

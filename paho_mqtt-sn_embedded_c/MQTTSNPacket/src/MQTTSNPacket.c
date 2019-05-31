@@ -132,7 +132,7 @@ int MQTTSNTopic_equals(const MQTTSN_topicid* const a, const MQTTSN_topicid* cons
     }
 }
 
-#if 0 // Those are already defined in MQTTSNPacket.c
+#if 0 // Those are already defined in MQTTPacket.c
 /**
  * Calculates an integer from two bytes read from the input buffer
  * @param pptr pointer to the input buffer - incremented by the number of bytes used & returned

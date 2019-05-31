@@ -45,7 +45,7 @@ For secure communication over TCP a `TLSSocket` has to be provided.
 
 For MQTT-SN communication a `UDPSocket` has to be provided.
 
-Secure MQTT-SN communication (over a `DTLSSocket`) is not yet supported.
+For secure MQTT-SN communication, a `DTLSSocket` has to be provided.
 
 After the socket is created, an instance of class `MQTTClient` can be created with the pointer to the socket as an argument. The class will distinguish between MQTT and MQTT-SN operation based on the socket's type.
 
@@ -94,7 +94,7 @@ The MQTTNetwork has to `connect` to a broker, given its address and port number.
 
 #### API usage ####
 
-Apart from lanaguage details and different creation and initialization procedure, the APIs of both the legacy and new API are the same.
+Apart from language details and different creation and initialization procedure, the APIs of both the legacy and new API are the same.
 
 Once connected the MQTT/MQTT-SN client is able to:
 

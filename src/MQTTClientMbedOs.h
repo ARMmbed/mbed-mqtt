@@ -44,7 +44,7 @@ public:
      *
      * @param _socket socket to be used for MQTT communication.
      */
-    MQTTNetworkMbedOs(Socket* _socket) : socket(_socket) {}
+    MQTTNetworkMbedOs(Socket *_socket) : socket(_socket) {}
 
     /**
      * @brief Read data from the socket.
@@ -53,7 +53,7 @@ public:
      * @param len expected amount of bytes
      * @param timeout timeout for the operation
      */
-    int read(unsigned char* buffer, int len, int timeout);
+    int read(unsigned char *buffer, int len, int timeout);
 
     /**
      * @brief Write data to the socket.
@@ -62,7 +62,7 @@ public:
      * @param len amount of bytes to write
      * @param timeout timeout for the operation
      */
-    int write(unsigned char* buffer, int len, int timeout);
+    int write(unsigned char *buffer, int len, int timeout);
 
     /**
      * @brief Connect the socket to the hostname at a given port.
@@ -75,7 +75,7 @@ public:
      * IP address like "192.168.52.10" or domain address, like "mqtt.flespi.io"
      * @param port port number to be used for connection
      */
-    int connect(const char* hostname, int port);
+    int connect(const char *hostname, int port);
 
     /**
      * @brief Disconnect from the hostname.
@@ -83,7 +83,7 @@ public:
     int disconnect();
 
 private:
-    Socket* socket;
+    Socket *socket;
 };
 
 /**
@@ -96,9 +96,9 @@ private:
 class MQTTClient {
 public:
     /** MQTT message handler */
-    typedef void (*messageHandler)(MQTT::MessageData&);
+    typedef void (*messageHandler)(MQTT::MessageData &);
     /** MQTT-SN message handler */
-    typedef void (*messageHandlerSN)(MQTTSN::MessageData&);
+    typedef void (*messageHandlerSN)(MQTTSN::MessageData &);
 
     /**
      * @brief Constructor for the TCPSocket-based communication.
@@ -106,28 +106,28 @@ public:
      *
      * @param _socket socket to be used for communication
      */
-    MQTTClient(TCPSocket* _socket);
+    MQTTClient(TCPSocket *_socket);
     /**
      * @brief Constructor for the TLSSocket-based communication.
      * MQTT protocol will be used over a secure socket.
      *
      * @param _socket socket to be used for communication
      */
-    MQTTClient(TLSSocket* _socket);
+    MQTTClient(TLSSocket *_socket);
     /**
      * @brief Constructor for the UDPSocket-based communication.
      * MQTT-SN protocol will be used.
      *
      * @param _socket socket to be used for communication
      */
-    MQTTClient(UDPSocket* _socket);
+    MQTTClient(UDPSocket *_socket);
     /**
      * @brief Constructor for the DTLSSocket-based communication.
      * MQTT-SN protocol will be used over a secure socket.
      *
      * @param _socket socket to be used for communication
      */
-    MQTTClient(DTLSSocket* _socket);
+    MQTTClient(DTLSSocket *_socket);
 
     /**
      * @brief Connect to the MQTT broker
@@ -138,7 +138,7 @@ public:
      * @param options options to be used for the connection.
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t connect(MQTTPacket_connectData& options);
+    nsapi_error_t connect(MQTTPacket_connectData &options);
     /**
      * @brief Connect to the MQTT broker via an MQTT-SN gateway
      *
@@ -148,7 +148,7 @@ public:
      * @param options options to be used for the connection.
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t connect(MQTTSNPacket_connectData& options);
+    nsapi_error_t connect(MQTTSNPacket_connectData &options);
 
     /**
      * @brief Publish message to a topic.
@@ -156,14 +156,14 @@ public:
      * @param message message to be published
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t publish(const char* topicName, MQTT::Message& message);
+    nsapi_error_t publish(const char *topicName, MQTT::Message &message);
     /**
      * @brief Publish message to an MQTT-SN topic.
      * @param topicName MQTTSN_topicid structure specifying the topic.
      * @param message message to be published
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t publish(MQTTSN_topicid& topicName, MQTTSN::Message& message);
+    nsapi_error_t publish(MQTTSN_topicid &topicName, MQTTSN::Message &message);
 
     /**
      * @brief Subscribe to a topic.
@@ -172,7 +172,7 @@ public:
      * @param mh message handler to be called upon message reception
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t subscribe(const char* topicFilter, enum MQTT::QoS qos, messageHandler mh);
+    nsapi_error_t subscribe(const char *topicFilter, enum MQTT::QoS qos, messageHandler mh);
     /**
      * @brief Subscribe to an MQTT-SN topic.
      * @param topicFilter string with a topic filter
@@ -180,20 +180,20 @@ public:
      * @param mh message handler to be called upon message reception
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t subscribe(MQTTSN_topicid& topicFilter, enum MQTTSN::QoS qos, messageHandlerSN mh);
+    nsapi_error_t subscribe(MQTTSN_topicid &topicFilter, enum MQTTSN::QoS qos, messageHandlerSN mh);
 
     /**
      * @brief Unsubscribe from a topic.
      * @param topicFilter string with a topic filter
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t unsubscribe(const char* topicFilter);
+    nsapi_error_t unsubscribe(const char *topicFilter);
     /**
      * @brief Unsubscribe from an MQTT-SN topic.
      * @param topicFilter string with a topic filter
      * @retval NSAPI_ERROR_OK on success, error code on failure
      */
-    nsapi_error_t unsubscribe(MQTTSN_topicid& topicFilter);
+    nsapi_error_t unsubscribe(MQTTSN_topicid &topicFilter);
 
     /**
      * @brief Yield current thread execution and handle other events
@@ -223,20 +223,20 @@ public:
      *  @param topicFilter - a topic pattern which can include wildcards
      *  @param mh - pointer to the callback function. If 0, removes the callback if any
      */
-    nsapi_error_t setMessageHandler(const char* topicFilter, messageHandler mh);
+    nsapi_error_t setMessageHandler(const char *topicFilter, messageHandler mh);
 
 private:
     /**
      * @brief Helper function to initialize member variables.
      */
-    void init(Socket* sock);
+    void init(Socket *sock);
 
-    Socket* socket;
-    MQTTNetworkMbedOs* mqttNet;
+    Socket *socket;
+    MQTTNetworkMbedOs *mqttNet;
     NetworkInterface *net;
 
-    MQTT::Client<MQTTNetworkMbedOs, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE, MBED_CONF_MBED_MQTT_MAX_CONNECTIONS>* client;
-    MQTTSN::Client<MQTTNetworkMbedOs, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE, MBED_CONF_MBED_MQTT_MAX_CONNECTIONS>* clientSN;
+    MQTT::Client<MQTTNetworkMbedOs, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE, MBED_CONF_MBED_MQTT_MAX_CONNECTIONS> *client;
+    MQTTSN::Client<MQTTNetworkMbedOs, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE, MBED_CONF_MBED_MQTT_MAX_CONNECTIONS> *clientSN;
 };
 
 #endif // MQTT_CLIENT_MBED_OS_H

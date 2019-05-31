@@ -36,7 +36,7 @@
 void MQTT_CONNECT()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_CONNECT";
+    data.clientID.cstring = (char *)"MQTT_CONNECT";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTT_API_DEINIT();
 }
@@ -55,7 +55,7 @@ void MQTT_CONNECT_NOT_CONNECTED()
 void MQTT_SUBSCRIBE()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTT_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
@@ -74,7 +74,7 @@ void MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED()
     MQTTClient client(&socket);
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
-    data.clientID.cstring = (char*)"MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED";
+    data.clientID.cstring = (char *)"MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
 }
@@ -89,7 +89,7 @@ void MQTT_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 void MQTT_SUBSCRIBE_TOPIC_TOO_LONG()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_SUBSCRIBE_TOPIC_TOO_LONG";
+    data.clientID.cstring = (char *)"MQTT_SUBSCRIBE_TOPIC_TOO_LONG";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.subscribe(mqtt_global::topic_too_long, MQTT::QOS0, messageArrived));
     MQTT_API_DEINIT();
@@ -98,7 +98,7 @@ void MQTT_SUBSCRIBE_TOPIC_TOO_LONG()
 void MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.subscribe(mqtt_global::topic, MQTT::QOS0, NULL));
     MQTT_API_DEINIT();
@@ -107,7 +107,7 @@ void MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 void MQTT_SUBSCRIBE_RECEIVE()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTT_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     int arrivedCountBeforeSubscription = arrivedcount;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::mbed_public_test_topic, MQTT::QOS0, messageArrived));
@@ -122,7 +122,7 @@ void MQTT_SUBSCRIBE_RECEIVE()
 void MQTT_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTT_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.unsubscribe(mqtt_global::topic));
     MQTT_API_DEINIT();
@@ -131,7 +131,7 @@ void MQTT_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 void MQTT_UNSUBSCRIBE_INVALID()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_UNSUBSCRIBE_INVALID";
+    data.clientID.cstring = (char *)"MQTT_UNSUBSCRIBE_INVALID";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.unsubscribe(""));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_NO_CONNECTION, client.unsubscribe(mqtt_global::topic_too_long));
@@ -141,7 +141,7 @@ void MQTT_UNSUBSCRIBE_INVALID()
 void MQTT_PUBLISH()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_nnPUBLISH";
+    data.clientID.cstring = (char *)"MQTT_nnPUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, mqtt_global::default_message));
     MQTT::Message msg = mqtt_global::default_message;
@@ -162,7 +162,7 @@ void MQTT_PUBLISH_NOT_CONNECTED()
 void MQTT_PUBLISH_TOPIC_TOO_LONG()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_PUBLISH";
+    data.clientID.cstring = (char *)"MQTT_PUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // TODO verify if this is passing intentionally or if this is a bug?
 //    TEST_ASSERT_EQUAL(-1, client.publish(mqtt_global::topic_too_long, mqtt_global::default_message));
@@ -173,9 +173,9 @@ void MQTT_CONNECT_USER_PASSWORD_INCORRECT()
 {
     MQTT_API_INIT();
     data.MQTTVersion = 3;
-    data.clientID.cstring = (char*)"MQTT_CONNECT_USER_PASSWORD_INCORRECT";
-    data.username.cstring = (char*)"wronguser";
-    data.password.cstring = (char*)"wrongpassword";
+    data.clientID.cstring = (char *)"MQTT_CONNECT_USER_PASSWORD_INCORRECT";
+    data.username.cstring = (char *)"wronguser";
+    data.password.cstring = (char *)"wrongpassword";
     TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // Sending works. The retval from MQTTDeserialize_connack (5) is returned... Bug?
     MQTT_API_DEINIT();

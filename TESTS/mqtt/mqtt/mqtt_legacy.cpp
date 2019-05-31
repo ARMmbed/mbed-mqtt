@@ -37,7 +37,7 @@
 void MQTT_LEGACY_CONNECT()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_CONNECT";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_CONNECT";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTT_LEGACY_API_DEINIT();
 }
@@ -55,7 +55,7 @@ void MQTT_LEGACY_CONNECT_NOT_CONNECTED()
 void MQTT_LEGACY_SUBSCRIBE()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
@@ -73,7 +73,7 @@ void MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED()
     TEST_ASSERT_EQUAL(NSAPI_ERROR_DNS_FAILURE, mqttNet.connect("i.dont.exist", mqtt_global::port));
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
-    data.clientID.cstring = (char*)"MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_SUBSCRIBE_NETWORK_NOT_CONNECTED";
     TEST_ASSERT_EQUAL(-1, client.connect(data));
     TEST_ASSERT_EQUAL(-1, client.subscribe(mqtt_global::topic, MQTT::QOS0, messageArrived));
 }
@@ -89,7 +89,7 @@ void MQTT_LEGACY_SUBSCRIBE_CLIENT_NOT_CONNECTED()
 void MQTT_LEGACY_SUBSCRIBE_TOPIC_TOO_LONG()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_SUBSCRIBE_TOPIC_TOO_LONG";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_SUBSCRIBE_TOPIC_TOO_LONG";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(-1, client.subscribe(mqtt_global::topic_too_long, MQTT::QOS0, messageArrived));
     MQTT_LEGACY_API_DEINIT();
@@ -98,7 +98,7 @@ void MQTT_LEGACY_SUBSCRIBE_TOPIC_TOO_LONG()
 void MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(-1, client.subscribe(mqtt_global::topic, MQTT::QOS0, NULL));
     MQTT_LEGACY_API_DEINIT();
@@ -107,7 +107,7 @@ void MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER()
 void MQTT_LEGACY_SUBSCRIBE_RECEIVE()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_SUBSCRIBE_INVALID_MESSAGE_HANDLER";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     int arrivedCountBeforeSubscription = arrivedcount;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::mbed_public_test_topic, MQTT::QOS0, messageArrived));
@@ -122,7 +122,7 @@ void MQTT_LEGACY_SUBSCRIBE_RECEIVE()
 void MQTT_LEGACY_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_UNSUBSCRIBE_WITHOUT_SUBSCRIBE";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.unsubscribe(mqtt_global::topic));
     MQTT_LEGACY_API_DEINIT();
@@ -131,7 +131,7 @@ void MQTT_LEGACY_UNSUBSCRIBE_WITHOUT_SUBSCRIBE()
 void MQTT_LEGACY_UNSUBSCRIBE_INVALID()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_UNSUBSCRIBE_INVALID";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_UNSUBSCRIBE_INVALID";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(-1, client.unsubscribe(""));
     TEST_ASSERT_EQUAL(-1, client.unsubscribe(mqtt_global::topic_too_long));
@@ -141,7 +141,7 @@ void MQTT_LEGACY_UNSUBSCRIBE_INVALID()
 void MQTT_LEGACY_PUBLISH()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_nnPUBLISH";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_nnPUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, mqtt_global::default_message));
     MQTT::Message msg = mqtt_global::default_message;
@@ -162,7 +162,7 @@ void MQTT_LEGACY_PUBLISH_NOT_CONNECTED()
 void MQTT_LEGACY_PUBLISH_TOPIC_TOO_LONG()
 {
     MQTT_LEGACY_API_INIT();
-    data.clientID.cstring = (char*)"MQTT_LEGACY_PUBLISH";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_PUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // TODO verify if this is passing intentionally or if this is a bug?
 //    TEST_ASSERT_EQUAL(-1, client.publish(mqtt_global::topic_too_long, mqtt_global::default_message));
@@ -173,9 +173,9 @@ void MQTT_LEGACY_CONNECT_USER_PASSWORD_INCORRECT()
 {
     MQTT_LEGACY_API_INIT();
     data.MQTTVersion = 3;
-    data.clientID.cstring = (char*)"MQTT_LEGACY_CONNECT_USER_PASSWORD_INCORRECT";
-    data.username.cstring = (char*)"wronguser";
-    data.password.cstring = (char*)"wrongpassword";
+    data.clientID.cstring = (char *)"MQTT_LEGACY_CONNECT_USER_PASSWORD_INCORRECT";
+    data.username.cstring = (char *)"wronguser";
+    data.password.cstring = (char *)"wrongpassword";
     TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     // Sending works. The retval from MQTTDeserialize_connack (5) is returned... Bug?
     MQTT_LEGACY_API_DEINIT();
@@ -215,7 +215,7 @@ void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH()
     MQTT::Client<MQTTNetworkTLS, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> client(mqttNet);
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.connect(mqtt_global::hostname, mqtt_global::port_tls,
-            mqtt_global::SSL_CA_PEM, mqtt_global::SSL_CLIENT_CERT_PEM, mqtt_global::SSL_CLIENT_PRIVATE_KEY_PEM));
+                      mqtt_global::SSL_CA_PEM, mqtt_global::SSL_CLIENT_CERT_PEM, mqtt_global::SSL_CLIENT_PRIVATE_KEY_PEM));
 
     send_messages< MQTT::Client<MQTTNetworkTLS, Countdown, MBED_CONF_MBED_MQTT_MAX_PACKET_SIZE> >(client, "MQTT_LEGACYTLS_CONNECT_SUBSCRIBE_PUBLISH");
 
