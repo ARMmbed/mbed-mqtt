@@ -545,7 +545,7 @@ int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::cycle(Timer& timer)
             else if (isQoS2msgidFree(msg.id))
             {
                 if (useQoS2msgid(msg.id))
-                    deliverMessage(topicName, msg);
+                    deliverMessage(topicid, msg);
                 else
                     WARN("Maximum number of incoming QoS2 messages exceeded");
             }   
@@ -567,7 +567,7 @@ int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::cycle(Timer& timer)
             break;
 #endif
 #if MQTTCLIENT_QOS2
-        case PUBREC:
+        case MQTTSN_PUBREC:
             unsigned short mypacketid;
             unsigned char dup, type;
             if (MQTTDeserialize_ack(&type, &dup, &mypacketid, readbuf, MAX_PACKET_SIZE) != 1)
@@ -579,7 +579,7 @@ int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::cycle(Timer& timer)
             if (rc == FAILURE)
                 goto exit; // there was a problem
             break;
-        case PUBCOMP:
+        case MQTTSN_PUBCOMP:
             break;
 #endif
         case MQTTSN_PINGRESP:
