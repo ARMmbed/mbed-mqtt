@@ -142,7 +142,7 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
         data.password.cstring = (char*)MBED_CONF_MBED_MQTT_TESTS_PASSWORD;
     }
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS1, messageArrived));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(mqtt_global::topic, MQTT::QOS2, messageArrived));
 
     MQTT::Message message = mqtt_global::default_message;
 
@@ -165,13 +165,15 @@ template <class Client> void send_messages(Client &client, char *clientID, bool 
         client.yield(10);
     }
 
-//    // QoS 2
-//    sprintf(buf, "QoS 2 %s\n", clientID);
-//    message.qos = MQTT::QOS2;
-//    message.payloadlen = strlen(buf)+1;
-//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
-//    while (arrivedcount < 3)
-//        client.yield(100);
+    // QoS 2
+#if MQTTCLIENT_QOS2
+    sprintf(buf, "QoS 2 %s\n", clientID);
+    message.qos = MQTT::QOS2;
+    message.payloadlen = strlen(buf)+1;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, message));
+    while (arrivedcount < 3)
+        client.yield(100);
+#endif
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.unsubscribe(mqtt_global::topic));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.disconnect() != 0);
@@ -192,7 +194,7 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     MQTTSN_topicid topic;
     init_topic_sn(topic);
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(topic, MQTTSN::QOS1, messageArrivedSN));
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.subscribe(topic, MQTTSN::QOS2, messageArrivedSN));
 
     // QoS 0
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(topic, mqtt_global::default_message_sn));
@@ -212,13 +214,15 @@ template <class Client> void send_messages_sn(Client &client, char *clientID) {
     while (arrivedcountSN < 2)
         client.yield(10);
 
-//    // QoS 2
-//    sprintf(buf, "QoS 2 %s\n", clientID);
-//    message.qos = MQTTSN::QOS2;
-//    message.payloadlen = strlen(buf)+1;
-//    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK,client.publish(topic, message));
-//    while (arrivedcountSN < 3)
-//        client.yield(10);
+#if MQTTCLIENT_QOS2
+    // QoS 2
+    sprintf(buf, "QoS 2 %s\n", clientID);
+    message.qos = MQTTSN::QOS2;
+    message.payloadlen = strlen(buf)+1;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK,client.publish(topic, message));
+    while (arrivedcountSN < 3)
+        client.yield(10);
+#endif
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.unsubscribe(topic)); //mqtt_global::topic_sn
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.disconnect() != 0);
