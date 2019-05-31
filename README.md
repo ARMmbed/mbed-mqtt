@@ -6,6 +6,29 @@ By design MQTT operates over TCP protocol, so an MQTTSN (For MQTT for Sensor Net
 
 Mbed-os only allows you to create an MQTT client device, an external broker is needed for MQTT to operate. Clients can subscribe or publish to a topic, after connecting to a broker.
 
+### Build configuration
+
+MQTT library will compile and run without any additional configuration. It is possible to configure some options with the mbed_app.json file.
+The example below sets up a maximum number of connection, packet size and enables QoS2 operation:
+
+```
+{
+    "macros": {
+        "MQTTCLIENT_QOS2"
+    },
+    "target_overrides": {
+        "*": {
+            "mbed-mqtt.max-connections": "5"
+            "mbed-mqtt.max-packet-size": "1024"
+           }
+    }
+}
+```
+
+See [mbed_lib.json](mbed_lib.json) for all configurable options.
+
+See [test README](TESTS/mqtt/README.md) to find out about tests-specific configuration configuration.
+
 ### API and usage
 
 Mbed-os uses [Eclipse paho project emmbedded c implementation of MQTT protocol](https://github.com/eclipse/paho.mqtt.embedded-c) and [MQTT-SN protocol](https://github.com/eclipse/paho.mqtt-sn.embedded-c/).
