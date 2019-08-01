@@ -483,7 +483,7 @@ template<class Network, class Timer, int a, int b>
 int MQTTSN::Client<Network, Timer, a, b>::yield(unsigned long timeout_ms)
 {
     int rc = SUCCESS;
-    Timer timer = Timer();
+    Timer timer;
 
     timer.countdown_ms(timeout_ms);
     while (!timer.expired())
@@ -610,7 +610,7 @@ int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::keepalive()
         if (!ping_outstanding)
         {
             MQTTSNString clientid = MQTTSNString_initializer;
-            Timer timer = Timer(1000);
+            Timer timer(1000);
             int len = MQTTSNSerialize_pingreq(sendbuf, MAX_PACKET_SIZE, clientid);
             if (len > 0 && (rc = sendPacket(len, timer)) == SUCCESS) // send the ping packet
                 ping_outstanding = true;
@@ -642,7 +642,7 @@ int MQTTSN::Client<Network, Timer, a, b>::waitfor(int packet_type, Timer& timer)
 template<class Network, class Timer, int MAX_PACKET_SIZE, int b>
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::connect(MQTTSNPacket_connectData& options)
 {
-    Timer connect_timer = Timer(command_timeout_ms);
+    Timer connect_timer(command_timeout_ms);
     int rc = FAILURE;
     int len = 0;
 
@@ -709,7 +709,7 @@ template<class Network, class Timer, int MAX_PACKET_SIZE, int MAX_MESSAGE_HANDLE
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, MAX_MESSAGE_HANDLERS>::subscribe(MQTTSN_topicid& topicFilter, enum QoS qos, messageHandler messageHandler)
 {
     int rc = FAILURE;
-    Timer timer = Timer(command_timeout_ms);
+    Timer timer(command_timeout_ms);
     int len = 0;
 
     if (!isconnected)
@@ -775,7 +775,7 @@ template<class Network, class Timer, int MAX_PACKET_SIZE, int MAX_MESSAGE_HANDLE
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, MAX_MESSAGE_HANDLERS>::unsubscribe(MQTTSN_topicid& topicFilter)
 {
     int rc = FAILURE;
-    Timer timer = Timer(command_timeout_ms);
+    Timer timer(command_timeout_ms);
     int len = 0;
 
     if (!isconnected)
@@ -854,7 +854,7 @@ template<class Network, class Timer, int MAX_PACKET_SIZE, int b>
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::publish(MQTTSN_topicid& topic, void* payload, size_t payloadlen, unsigned short& id, enum QoS qos, bool retained)
 {
     int rc = FAILURE;
-    Timer timer = Timer(command_timeout_ms);
+    Timer timer(command_timeout_ms);
     int len = 0;
 
     if (!isconnected)
@@ -908,7 +908,7 @@ template<class Network, class Timer, int MAX_PACKET_SIZE, int b>
 int MQTTSN::Client<Network, Timer, MAX_PACKET_SIZE, b>::disconnect(unsigned short duration)
 {
     int rc = FAILURE;
-    Timer timer = Timer(command_timeout_ms);     // we might wait for incomplete incoming publishes to complete
+    Timer timer(command_timeout_ms);     // we might wait for incomplete incoming publishes to complete
     int int_duration = (duration == 0) ? -1 : (int)duration;
     int len = MQTTSNSerialize_disconnect(sendbuf, MAX_PACKET_SIZE, int_duration);
     if (len > 0)
