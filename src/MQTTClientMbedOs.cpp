@@ -27,6 +27,11 @@ int MQTTNetworkMbedOs::read(unsigned char *buffer, int len, int timeout)
         // MQTTClient.readPacket() requires 0 on time out and no data.
         return 0;
     }
+    if (rc == 0) {
+        // A receive size of 0 indicates that the socket
+        // was successfully closed so indicate this to MQTTClient
+        return -1;
+    }
     return rc;
 }
 
@@ -39,6 +44,10 @@ int MQTTNetworkMbedOs::write(unsigned char *buffer, int len, int timeout)
         // time out and no data
         // MQTTClient.writePacket() requires 0 on time out and no data.
         return 0;
+    }
+    if (rc == 0) {
+        // The socket is closed so indicate this to MQTTClient
+        return -1;
     }
     return rc;
 }
