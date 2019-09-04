@@ -18,7 +18,7 @@ The example below sets up a maximum number of connection, packet size and enable
     },
     "target_overrides": {
         "*": {
-            "mbed-mqtt.max-connections": "5"
+            "mbed-mqtt.max-connections": "5",
             "mbed-mqtt.max-packet-size": "1024"
            }
     }
@@ -69,9 +69,9 @@ The original paho library can be used, with mbed-os providing our own `Network` 
 
 To communicate over MQTT an instance of a template class `MQTT::Client<Network, Timer>` has to be created. mbed-os provides two Network specializations:
 
-* `MQTTNetwork` - to communicate over mbed-os's `TCPSocket`
+* `MQTTNetwork` - to communicate over mbed-os's `TCPSocket`,
 
-* `MQTTNetworkTLS` - to communicate over mbed-os's `TLSSocket`
+* `MQTTNetworkTLS` - to communicate over mbed-os's `TLSSocket`.
 
 Paho's default `Timer` implementation, called `Countdown` and available from `MQTTmbed.h` can be used.
 
