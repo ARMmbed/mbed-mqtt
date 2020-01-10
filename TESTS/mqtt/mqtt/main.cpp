@@ -323,7 +323,12 @@ utest::v1::status_t test_setup(const size_t number_of_cases)
     NetworkInterface *net = NetworkInterface::get_default_instance();
     nsapi_error_t err = net->connect();
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, err);
-    printf("MBED: TCPClient IP address is '%s'\n", net->get_ip_address());
+
+    SocketAddress addr;
+    err = net->get_ip_address(&addr);
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, err);
+
+    printf("MBED: TCPClient IP address is '%s'\n", addr.get_ip_address());
 
     // Generate an string of length MAX_MQTT_PACKET_SIZE+1 with alphabet letters.
     char c = 'a';

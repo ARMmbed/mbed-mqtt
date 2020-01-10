@@ -23,8 +23,11 @@
     arrivedcount = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
     TCPSocket socket; \
+    SocketAddress addr; \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.open(net)); \
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(mqtt_global::hostname, mqtt_global::port)); \
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &addr)); \
+    addr.set_port(mqtt_global::port); \
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(addr)); \
     MQTTClient client(&socket); \
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer; \
     MQTT_API_ATTACH_USERNAME_PASSWORD() \
@@ -70,7 +73,8 @@ void MQTT_SUBSCRIBE_NETWORK_NOT_CONNECTED()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     TCPSocket socket;
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.open(net));
-    TEST_ASSERT_EQUAL(NSAPI_ERROR_DNS_FAILURE, socket.connect("i.dont.exist", mqtt_global::port));
+    SocketAddress addr; // intentionally empty
+    TEST_ASSERT_NOT_EQUAL(NSAPI_ERROR_OK, socket.connect(addr));
     MQTTClient client(&socket);
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
@@ -141,7 +145,7 @@ void MQTT_UNSUBSCRIBE_INVALID()
 void MQTT_PUBLISH()
 {
     MQTT_API_INIT();
-    data.clientID.cstring = (char *)"MQTT_nnPUBLISH";
+    data.clientID.cstring = (char *)"MQTT_PUBLISH";
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.connect(data));
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, client.publish(mqtt_global::topic, mqtt_global::default_message));
     MQTT::Message msg = mqtt_global::default_message;
@@ -186,7 +190,11 @@ void MQTT_CONNECT_SUBSCRIBE_PUBLISH()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     TCPSocket socket;
     socket.open(net);
-    socket.connect(mqtt_global::hostname, mqtt_global::port);
+    SocketAddress addr;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &addr));
+    addr.set_port(mqtt_global::port);
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(addr));
+    socket.connect(addr);
 
     MQTTClient client(&socket);
 
@@ -201,7 +209,10 @@ void MQTT_TLS_CONNECT_SUBSCRIBE_PUBLISH()
     TLSSocket *socket = new TLSSocket; // Allocate on heap to avoid stack overflow.
     TEST_ASSERT(NSAPI_ERROR_OK == socket->open(net));
     TEST_ASSERT(NSAPI_ERROR_OK == socket->set_root_ca_cert(mqtt_global::SSL_CA_PEM));
-    int ret = socket->connect(mqtt_global::hostname, mqtt_global::port_tls);
+    SocketAddress addr;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &addr));
+    addr.set_port(mqtt_global::port_tls);
+    int ret = socket->connect(addr);
     TEST_ASSERT(NSAPI_ERROR_OK == ret);
 
     MQTTClient client(socket);
@@ -218,7 +229,10 @@ void MQTT_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     TCPSocket socket;
     socket.open(net);
-    socket.connect(mqtt_global::hostname, mqtt_global::port);
+    SocketAddress addr;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &addr));
+    addr.set_port(mqtt_global::port);
+    socket.connect(addr);
 
     MQTTClient client(&socket);
 

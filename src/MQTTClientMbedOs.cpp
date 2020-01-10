@@ -196,9 +196,9 @@ nsapi_error_t MQTTClient::disconnect()
 bool MQTTClient::isConnected()
 {
     if (client != NULL) {
-        return NSAPI_ERROR_UNSUPPORTED;
+        return false;
     } else if (clientSN == NULL) {
-        return NSAPI_ERROR_NO_CONNECTION;
+        return false;
     } else {
         return clientSN->isConnected();
     }
@@ -206,7 +206,6 @@ bool MQTTClient::isConnected()
 
 void MQTTClient::setDefaultMessageHandler(messageHandler mh)
 {
-    nsapi_error_t ret = NSAPI_ERROR_OK;
     if (client != NULL) {
         client->setDefaultMessageHandler(mh);
     } else if (clientSN != NULL) {
