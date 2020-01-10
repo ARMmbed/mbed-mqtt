@@ -207,6 +207,7 @@ void MQTT_LEGACY_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD()
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }
 
+#if defined(MBEDTLS_SSL_CLI_C)
 void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
@@ -221,3 +222,4 @@ void MQTT_LEGACY_TLS_CONNECT_SUBSCRIBE_PUBLISH()
 
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, mqttNet.disconnect());
 }
+#endif

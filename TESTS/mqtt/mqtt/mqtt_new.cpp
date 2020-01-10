@@ -194,7 +194,7 @@ void MQTT_CONNECT_SUBSCRIBE_PUBLISH()
 
     socket.close();
 }
-
+#if defined(MBEDTLS_SSL_CLI_C)
 void MQTT_TLS_CONNECT_SUBSCRIBE_PUBLISH()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
@@ -211,6 +211,7 @@ void MQTT_TLS_CONNECT_SUBSCRIBE_PUBLISH()
     socket->close();
     delete socket;
 }
+#endif
 
 void MQTT_CONNECT_SUBSCRIBE_PUBLISH_USER_PASSWORD()
 {

@@ -262,6 +262,7 @@ void MQTTSN_UDP_CONNECT_SUBSCRIBE_PUBLISH()
     socket.close();
 }
 
+#if defined(MBEDTLS_SSL_CLI_C)
 void MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH()
 {
     NetworkInterface *net = NetworkInterface::get_default_instance();
@@ -278,3 +279,4 @@ void MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH()
     socket->close();
     delete socket;
 }
+#endif
