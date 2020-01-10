@@ -107,6 +107,7 @@ public:
      * @param _socket socket to be used for communication
      */
     MQTTClient(TCPSocket *_socket);
+#if defined(MBEDTLS_SSL_CLI_C) || defined(DOXYGEN_ONLY)
     /**
      * @brief Constructor for the TLSSocket-based communication.
      * MQTT protocol will be used over a secure socket.
@@ -114,6 +115,7 @@ public:
      * @param _socket socket to be used for communication
      */
     MQTTClient(TLSSocket *_socket);
+#endif
     /**
      * @brief Constructor for the UDPSocket-based communication.
      * MQTT-SN protocol will be used.
@@ -121,6 +123,7 @@ public:
      * @param _socket socket to be used for communication
      */
     MQTTClient(UDPSocket *_socket);
+#if defined(MBEDTLS_SSL_CLI_C) || defined(DOXYGEN_ONLY)
     /**
      * @brief Constructor for the DTLSSocket-based communication.
      * MQTT-SN protocol will be used over a secure socket.
@@ -128,6 +131,7 @@ public:
      * @param _socket socket to be used for communication
      */
     MQTTClient(DTLSSocket *_socket);
+#endif
 
     /**
      * @brief Connect to the MQTT broker

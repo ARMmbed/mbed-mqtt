@@ -22,6 +22,11 @@
 
 using namespace utest::v1;
 
+#if !defined(MBEDTLS_SSL_CLI_C) && MBED_CONF_MBED_MQTT_TESTS_TLS_ENABLE
+#warning "Cannot run TLS tests (MBED_CONF_MBED_MQTT_TESTS_TLS_ENABLE) with TLS disabled (no MBEDTLS_SSL_CLI_C)"
+#define MBED_CONF_MBED_MQTT_TESTS_TLS_ENABLE false
+#endif
+
 const char *mqtt_global::SSL_CA_PEM =
 
 #ifdef MQTT_TESTS_CA_CERT_FLESPI

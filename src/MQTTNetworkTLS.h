@@ -21,6 +21,8 @@
 #include "NetworkInterface.h"
 #include "TLSSocket.h"
 
+#if defined(MBEDTLS_SSL_CLI_C) || defined(DOXYGEN_ONLY)
+
 class MQTTNetworkTLS {
 public:
     MQTTNetworkTLS(NetworkInterface *aNetwork) : network(aNetwork)
@@ -89,4 +91,5 @@ private:
     TLSSocket *socket;
 };
 
+#endif // defined(MBEDTLS_SSL_CLI_C) || defined(DOXYGEN_ONLY)
 #endif // _MQTTNETWORKTLS_H_
