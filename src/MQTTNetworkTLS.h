@@ -61,6 +61,12 @@ public:
         if (ret < 0) {
             return ret;
         }
+        SocketAddress addr;
+        ret = network->gethostbyname(hostname, &addr);
+        if (ret < 0) {
+            return ret;
+        }
+        addr.set_port(port);
         ret = socket->set_root_ca_cert(ssl_ca_pem);
         if (ret < 0) {
             return ret;
@@ -71,7 +77,7 @@ public:
                 return ret;
             }
         }
-        return socket->connect(hostname, port);
+        return socket->connect(addr);
     }
 
     int disconnect()

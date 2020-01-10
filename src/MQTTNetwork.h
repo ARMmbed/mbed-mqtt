@@ -60,7 +60,10 @@ public:
         if ((ret = socket->open(network)) != NSAPI_ERROR_OK) {
             return ret;
         }
-        return socket->connect(hostname, port);
+        SocketAddress addr;
+        network->gethostbyname(hostname, &addr);
+        addr.set_port(port);
+        return socket->connect(addr);
     }
 
     int disconnect()

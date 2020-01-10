@@ -22,7 +22,9 @@
 #define MQTTSN_API_INIT() \
     arrivedcountSN = 0; \
     NetworkInterface *net = NetworkInterface::get_default_instance(); \
-    SocketAddress sockAddr(mqtt_global::hostname, mqtt_global::port_udp); \
+    SocketAddress sockAddr; \
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &sockAddr)); \
+    sockAddr.set_port(mqtt_global::port_udp); \
     UDPSocket socket; \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.open(net)); \
     TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, socket.connect(sockAddr)); \
@@ -267,8 +269,11 @@ void MQTTSN_DTLS_CONNECT_SUBSCRIBE_PUBLISH()
     NetworkInterface *net = NetworkInterface::get_default_instance();
     DTLSSocket *socket = new DTLSSocket; // Allocate on heap to avoid stack overflow.
     TEST_ASSERT(NSAPI_ERROR_OK == socket->open(net));
+    SocketAddress addr;
+    TEST_ASSERT_EQUAL(NSAPI_ERROR_OK, net->gethostbyname(mqtt_global::hostname, &addr));
+    addr.set_port(mqtt_global::port_udp);
     TEST_ASSERT(NSAPI_ERROR_OK == socket->set_root_ca_cert(mqtt_global::SSL_CA_PEM));
-    int ret = socket->connect(mqtt_global::hostname, mqtt_global::port_udp);
+    int ret = socket->connect(addr);
     TEST_ASSERT(NSAPI_ERROR_OK == ret);
 
     MQTTClient client(socket);
