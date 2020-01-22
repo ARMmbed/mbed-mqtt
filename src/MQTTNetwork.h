@@ -61,7 +61,9 @@ public:
             return ret;
         }
         SocketAddress addr;
-        network->gethostbyname(hostname, &addr);
+        if (network->gethostbyname(hostname, &addr) != NSAPI_ERROR_OK) {
+            return NSAPI_ERROR_DNS_FAILURE;
+        }
         addr.set_port(port);
         return socket->connect(addr);
     }
