@@ -95,6 +95,13 @@ MQTTClient::MQTTClient(DTLSSocket *_socket)
 };
 #endif
 
+MQTTClient::~MQTTClient()
+{
+    delete mqttNet;
+    if (client != NULL) delete client;
+    if (clientSN != NULL) delete clientSN;
+}
+
 nsapi_error_t MQTTClient::connect(MQTTPacket_connectData &options)
 {
     if (client == NULL) {

@@ -134,6 +134,11 @@ public:
 #endif
 
     /**
+     * @brief Destructor for the TCPSocket-based communication.
+     */
+    ~MQTTClient();
+
+    /**
      * @brief Connect to the MQTT broker
      *
      * This is different from connecting to the server, done in MQTTNetworkMbedOs::connect()
