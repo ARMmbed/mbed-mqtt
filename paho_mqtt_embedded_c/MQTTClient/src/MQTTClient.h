@@ -456,7 +456,10 @@ int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::readPacket(Timer& tim
     /* 1. read the header byte.  This has the packet type in it */
     rc = ipstack.read(readbuf, 1, timer.left_ms());
     if (rc != 1)
+    {
+        rc = 0; // timed out reading packet
         goto exit;
+    }
 
     len = 1;
     /* 2. read the remaining length.  This is variable in itself */
@@ -471,7 +474,10 @@ int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::readPacket(Timer& tim
 
     /* 3. read the rest of the buffer using a callback to supply the rest of the data */
     if (rem_len > 0 && (ipstack.read(readbuf + len, rem_len, timer.left_ms()) != rem_len))
+    {
+        rc = FAILURE;
         goto exit;
+    }
 
     header.byte = readbuf[0];
     rc = header.bits.type;
