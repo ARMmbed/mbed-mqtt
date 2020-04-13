@@ -218,7 +218,7 @@ public:
     nsapi_error_t disconnect();
 
     /**
-     * @brief (MQTT-SN) Check whether client is connected to a broker.
+     * @brief Check whether client is connected to a broker.
      * @retval true if the client is connected, false otherwise
      */
     bool isConnected();

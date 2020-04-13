@@ -202,10 +202,11 @@ nsapi_error_t MQTTClient::disconnect()
 
 bool MQTTClient::isConnected()
 {
-    if (client != NULL) {
+    if ((client == NULL && clientSN == NULL) || 
+            (client != NULL && clientSN != NULL)){
         return false;
-    } else if (clientSN == NULL) {
-        return false;
+    } else if( client != NULL) {
+        return client->isConnected();
     } else {
         return clientSN->isConnected();
     }
