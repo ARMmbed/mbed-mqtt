@@ -19,6 +19,7 @@
 #define _MQTTNETWORKUDP_H_
 
 #include "UDPSocket.h"
+#include "MQTTNetworkUtil.h"
 
 class MQTTSNNetworkUDP {
 public:
@@ -35,12 +36,12 @@ public:
 
     int read(unsigned char *buffer, int len, int timeout)
     {
-        return socket->recv(buffer, len);
+        return accumulate_mqtt_read(socket, buffer, len, timeout);
     }
 
     int write(unsigned char *buffer, int len, int timeout)
     {
-        return socket->send(buffer, len);
+        return mqtt_write(socket, buffer, len, timeout);
     }
 
     int connect(const char *hostname, int port)
