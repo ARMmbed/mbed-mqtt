@@ -20,6 +20,7 @@
 
 #include "NetworkInterface.h"
 #include "TLSSocket.h"
+#include "MQTTNetworkUtil.h"
 
 #if defined(MBEDTLS_SSL_CLI_C) || defined(DOXYGEN_ONLY)
 
@@ -37,23 +38,12 @@ public:
 
     int read(unsigned char *buffer, int len, int timeout)
     {
-        int ret = socket->recv(buffer, len);
-        if (ret == 0) {
-            // A receive size of 0 indicates that the socket
-            // was successfully closed so indicate this to MQTTClient
-            ret = -1;
-        }
-        return ret;
+        return accumulate_mqtt_read(socket, buffer, len, timeout);
     }
 
     int write(unsigned char *buffer, int len, int timeout)
     {
-        int ret = socket->send(buffer, len);
-        if (ret == 0) {
-            // The socket is closed so indicate this to MQTTClient
-            return -1;
-        }
-        return ret;
+        return mqtt_write(socket, buffer, len, timeout);
     }
 
     int connect(const char *hostname, int port, const char *ssl_ca_pem = NULL,
