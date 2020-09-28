@@ -105,3 +105,4 @@ Once connected the MQTT/MQTT-SN client is able to:
 * `publish` messages defined with `MQTT::Message` structure to a topic,
 * if no operation is required, but an MQTT connection should be kept open, the client can `yield`,
 * `MQTTNetworkTLS` requires a certificate to be set using `set_root_cert()` before calling connect.
+
