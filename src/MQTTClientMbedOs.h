@@ -22,7 +22,6 @@
 #include <TLSSocket.h>
 #include <DTLSSocket.h>
 #include <UDPSocket.h>
-#include "unity/unity.h"
 
 #include "FP.h"
 #include <MQTTPacket.h>
