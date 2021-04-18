@@ -29,6 +29,22 @@ See [mbed_lib.json](mbed_lib.json) for all configurable options.
 
 See [test README](TESTS/mqtt/README.md) to find out about tests-specific configuration configuration.
 
+### Building with CLI V2
+
+Assuming you have this repository cloned or somehow available at the `<your-project-root>/mbed-mqtt` directory.
+
+Add to your project's `CMakeLists.txt` file the following lines:
+
+```
+add_subdirectory(mbed-mqtt)
+
+target_link_libraries(${APP_TARGET} mbed-mqtt)
+target_link_libraries(${APP_TARGET} mbed-mbedtls)
+target_link_libraries(${APP_TARGET} mbed-nanostack)
+target_link_libraries(${APP_TARGET} mbed-greentea)
+
+```
+
 ### API and usage
 
 Mbed-os uses [Eclipse paho project emmbedded c implementation of MQTT protocol](https://github.com/eclipse/paho.mqtt.embedded-c) and [MQTT-SN protocol](https://github.com/eclipse/paho.mqtt-sn.embedded-c/).
