@@ -38,3 +38,10 @@ target_sources(mbed-mqtt
         ./paho_mqtt_embedded_c/MQTTPacket/src/MQTTFormat.c
         ./src/MQTTClientMbedOs.cpp
 )
+
+target_link_libraries(mbed-mqtt
+    INTERFACE
+        mbed-os
+        mbed-netsocket
+        mbed-greentea
+)

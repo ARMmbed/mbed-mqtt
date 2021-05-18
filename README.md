@@ -38,10 +38,9 @@ Add to your project's `CMakeLists.txt` file the following lines:
 ```
 add_subdirectory(mbed-mqtt)
 
-target_link_libraries(${APP_TARGET} mbed-mqtt)
-target_link_libraries(${APP_TARGET} mbed-mbedtls)
-target_link_libraries(${APP_TARGET} mbed-nanostack)
-target_link_libraries(${APP_TARGET} mbed-greentea)
+target_link_libraries(${APP_TARGET}
+    mbed-mqtt
+)
 
 ```
 
