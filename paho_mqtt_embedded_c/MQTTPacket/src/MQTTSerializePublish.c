@@ -53,7 +53,7 @@ int MQTTSerialize_publishLength(int qos, MQTTString topicName, int payloadlen)
   * @return the length of the serialized data.  <= 0 indicates error
   */
 int MQTTSerialize_publish(unsigned char* buf, int buflen, unsigned char dup, int qos, unsigned char retained, unsigned short packetid,
-		MQTTString topicName, unsigned char* payload, int payloadlen)
+		MQTTString topicName, const unsigned char* payload, int payloadlen)
 {
 	unsigned char *ptr = buf;
 	MQTTHeader header = {0};
