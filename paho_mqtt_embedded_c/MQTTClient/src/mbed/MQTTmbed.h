@@ -18,48 +18,62 @@
 #if !defined(MQTT_MBED_H)
 #define MQTT_MBED_H
 
+#include <chrono>
+
 #include "mbed.h"
 
 class Countdown
 {
 public:
-    Countdown() : t()
-    {
-
-    }
-
+    Countdown() =default;
+    
     Countdown(int ms) : t()
     {
         countdown_ms(ms);
     }
 
+    Countdown(std::chrono::milliseconds ms) : t()
+    {
+        countdown_ms(ms);
+    }
 
     bool expired()
     {
-        return t.read_ms() >= interval_end_ms;
+        return t.elapsed_time() >= interval_end_ms;
     }
 
-    void countdown_ms(unsigned long ms)
+    void countdown_ms(std::chrono::milliseconds ms)
     {
         t.stop();
-        interval_end_ms = ms;
+        interval_end_ms = std::move(ms);
         t.reset();
         t.start();
     }
 
-    void countdown(int seconds)
+    void countdown(std::chrono::seconds seconds)
     {
-        countdown_ms((unsigned long)seconds * 1000L);
+        countdown_ms(std::move(seconds));
+    }
+    
+    void countdown_ms(unsigned long ms)
+    {
+        countdown_ms(std::chrono::milliseconds{ms});
+    }
+    
+    void countdown(size_t seconds)
+    {
+        countdown_ms(std::chrono::seconds{seconds});
     }
 
     int left_ms()
     {
-        return interval_end_ms - t.read_ms();
+        using namespace std::chrono;
+        return duration_cast<milliseconds>(interval_end_ms - t.elapsed_time()).count();
     }
 
 private:
     Timer t;
-    unsigned long interval_end_ms;
+    std::chrono::milliseconds interval_end_ms;
 };
 
 #endif
