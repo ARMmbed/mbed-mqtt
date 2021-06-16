@@ -26,7 +26,7 @@
 #endif
 
 DLLExport int MQTTSerialize_publish(unsigned char* buf, int buflen, unsigned char dup, int qos, unsigned char retained, unsigned short packetid,
-		MQTTString topicName, unsigned char* payload, int payloadlen);
+		MQTTString topicName, const unsigned char* payload, int payloadlen);
 
 DLLExport int MQTTDeserialize_publish(unsigned char* dup, int* qos, unsigned char* retained, unsigned short* packetid, MQTTString* topicName,
 		unsigned char** payload, int* payloadlen, unsigned char* buf, int len);
