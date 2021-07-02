@@ -193,7 +193,7 @@ void MQTTClient::setDefaultMessageHandler(messageHandler mh)
     if (client != NULL) {
         client->setDefaultMessageHandler(mh);
     } else if (clientSN != NULL) {
-        client->setDefaultMessageHandler(mh);
+        clientSN->setDefaultMessageHandler(mh);
     }
 }
 
