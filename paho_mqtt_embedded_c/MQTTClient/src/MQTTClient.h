@@ -473,10 +473,22 @@ int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::readPacket(Timer& tim
     }
 
     /* 3. read the rest of the buffer using a callback to supply the rest of the data */
-    if (rem_len > 0 && (ipstack.read(readbuf + len, rem_len, timer.left_ms()) != rem_len))
+    while (rem_len > 0)
     {
-        rc = FAILURE;
-        goto exit;
+        const int read_len = ipstack.read(readbuf + len, rem_len, timer.left_ms());
+        if (read_len < 0 || rem_len < read_len) // Error
+        {
+            rc = FAILURE;
+            goto exit;
+        }
+        if (read_len == 0)                      // Time out
+        {
+            rc = 0;
+            goto exit;
+        }
+
+        len += read_len;
+        rem_len -= read_len;
     }
 
     header.byte = readbuf[0];
@@ -591,7 +603,6 @@ int MQTT::Client<Network, Timer, a, b>::yield(unsigned long timeout_ms)
 
     return rc;
 }
-
 
 template<class Network, class Timer, int MAX_MQTT_PACKET_SIZE, int b>
 int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::cycle(Timer& timer)
