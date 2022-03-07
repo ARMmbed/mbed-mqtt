@@ -178,7 +178,7 @@ public:
      *  @param retained - whether the message should be retained
      *  @return success code -
      */
-    int publish(const char* topicName, void* payload, size_t payloadlen, enum QoS qos = QOS0, bool retained = false);
+    int publish(const char* topicName, const void* payload, size_t payloadlen, enum QoS qos = QOS0, bool retained = false);
 
     /** MQTT Publish - send an MQTT publish packet and wait for all acks to complete for all QoSs
      *  @param topic - the topic to publish to
@@ -189,7 +189,7 @@ public:
      *  @param retained - whether the message should be retained
      *  @return success code -
      */
-    int publish(const char* topicName, void* payload, size_t payloadlen, unsigned short& id, enum QoS qos = QOS1, bool retained = false);
+    int publish(const char* topicName, const void* payload, size_t payloadlen, unsigned short& id, enum QoS qos = QOS1, bool retained = false);
 
     /** MQTT Subscribe - send an MQTT subscribe packet and wait for the suback
      *  @param topicFilter - a topic pattern which can include wildcards
@@ -1001,7 +1001,7 @@ exit:
 
 
 template<class Network, class Timer, int MAX_MQTT_PACKET_SIZE, int b>
-int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::publish(const char* topicName, void* payload, size_t payloadlen, unsigned short& id, enum QoS qos, bool retained)
+int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::publish(const char* topicName, const void* payload, size_t payloadlen, unsigned short& id, enum QoS qos, bool retained)
 {
     int rc = FAILURE;
     Timer timer(command_timeout_ms);
@@ -1043,7 +1043,7 @@ exit:
 
 
 template<class Network, class Timer, int MAX_MQTT_PACKET_SIZE, int b>
-int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::publish(const char* topicName, void* payload, size_t payloadlen, enum QoS qos, bool retained)
+int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::publish(const char* topicName, const void* payload, size_t payloadlen, enum QoS qos, bool retained)
 {
     unsigned short id = 0;  // dummy - not used for anything
     return publish(topicName, payload, payloadlen, id, qos, retained);
