@@ -36,7 +36,8 @@ public:
 
     bool expired()
     {
-        return t.read_ms() >= interval_end_ms;
+        // Editied by Fahid Shehzad 20220410, Original: return t.read_ms() >= interval_end_ms;
+        return interval_end_ms - std::chrono::duration_cast<std::chrono::milliseconds>(t.elapsed_time()).count();
     }
 
     void countdown_ms(unsigned long ms)
@@ -54,7 +55,8 @@ public:
 
     int left_ms()
     {
-        return interval_end_ms - t.read_ms();
+        // Editied by Fahid Shehzad 20220410, Original: return t.read_ms() >= interval_end_ms;
+        return interval_end_ms - std::chrono::duration_cast<std::chrono::milliseconds>(t.elapsed_time()).count();
     }
 
 private:
