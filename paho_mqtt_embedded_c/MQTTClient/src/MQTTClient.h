@@ -457,7 +457,7 @@ int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::readPacket(Timer& tim
     rc = ipstack.read(readbuf, 1, timer.left_ms());
     if (rc != 1)
     {
-        rc = 0; // timed out reading packet
+        // timed out reading packet (0) or closed socket(-1)
         goto exit;
     }
 
