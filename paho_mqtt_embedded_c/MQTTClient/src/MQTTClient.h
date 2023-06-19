@@ -256,7 +256,9 @@ private:
     unsigned char sendbuf[MAX_MQTT_PACKET_SIZE];
     unsigned char readbuf[MAX_MQTT_PACKET_SIZE];
 
-    Timer last_sent, last_received;
+    Timer last_sent;
+    Timer last_received;
+    Timer ping_sent;
     unsigned int keepAliveInterval;
     bool ping_outstanding;
     bool cleansession;
@@ -700,7 +702,6 @@ template<class Network, class Timer, int MAX_MQTT_PACKET_SIZE, int b>
 int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::keepalive()
 {
     int rc = SUCCESS;
-    static Timer ping_sent;
 
     if (keepAliveInterval == 0)
         goto exit;
