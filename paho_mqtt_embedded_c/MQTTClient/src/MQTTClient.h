@@ -1067,6 +1067,9 @@ int MQTT::Client<Network, Timer, MAX_MQTT_PACKET_SIZE, b>::disconnect()
     if (len > 0)
         rc = sendPacket(len, timer);            // send the disconnect packet
     closeSession();
+    last_sent.stop();
+    last_received.stop();
+    ping_sent.stop();
     return rc;
 }
 
