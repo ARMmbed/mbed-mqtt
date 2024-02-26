@@ -57,6 +57,12 @@ public:
         return interval_end_ms - t.read_ms();
     }
 
+    void stop()
+    {
+        t.stop();
+        t.reset();
+    }
+
 private:
     Timer t;
     unsigned long interval_end_ms;
